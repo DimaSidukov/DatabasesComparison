@@ -13,3 +13,5 @@ What is DAO pattern in database? Any analogues?
 Look up for Realm. He is considered to be quite efficient since it is written in C++
 
 **Object-oriented database** vs **Object-relational database**
+
+https://blog.mindorks.com/how-does-room-work-internally
