@@ -3,11 +3,13 @@ package com.example.databasescomparison.ui
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.databasescomparison.R
 import com.example.databasescomparison.data.model.remotenews.Article
+import com.example.databasescomparison.data.model.timer.DbTimer
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity(), MainModel {
@@ -17,6 +19,10 @@ class MainActivity : AppCompatActivity(), MainModel {
     private lateinit var recyclerView: RecyclerView
     private lateinit var editText: EditText
     private lateinit var button: Button
+    private lateinit var sqlohTime: TextView
+    private lateinit var roomTime: TextView
+    private lateinit var realmTime: TextView
+    private lateinit var objectBoxTime: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +35,16 @@ class MainActivity : AppCompatActivity(), MainModel {
 
         editText = findViewById(R.id.edittext)
         button = findViewById(R.id.button)
+        sqlohTime = findViewById(R.id.sqloh_time)
+        roomTime = findViewById(R.id.room_time)
+        realmTime = findViewById(R.id.realm_time)
+        objectBoxTime = findViewById(R.id.object_box_time)
 
         button.setOnClickListener {
             if (editText.text.isNotEmpty()) {
                 presenter.requestByQuery(editText.text.toString())
+            } else {
+                presenter.requestHeadliners()
             }
         }
     }
@@ -43,4 +55,13 @@ class MainActivity : AppCompatActivity(), MainModel {
             recyclerView.adapter = adapter
         }
     }
+
+    override fun updateTimerResults(dbTimer: DbTimer) {
+        runOnUiThread {
+            sqlohTime.text = dbTimer.sqlohTime.toText()
+            roomTime.text = dbTimer.roomTime.toText()
+        }
+    }
+
+    private fun Long.toText() = "$this ms"
 }

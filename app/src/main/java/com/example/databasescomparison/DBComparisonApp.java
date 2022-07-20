@@ -1,6 +1,7 @@
 package com.example.databasescomparison;
 
 import static com.example.databasescomparison.di.ModulesKt.getAppModule;
+import static com.example.databasescomparison.di.ModulesKt.getDatabaseModule;
 import static com.example.databasescomparison.di.ModulesKt.getNetworkModule;
 import static com.example.databasescomparison.di.ModulesKt.getRepositoryModule;
 import static org.koin.core.context.DefaultContextExtKt.startKoin;
@@ -20,6 +21,7 @@ public class DBComparisonApp extends Application {
             .create(this)
             .modules(
                 getNetworkModule(),
+                getDatabaseModule(),
                 getRepositoryModule(),
                 getAppModule()
             );

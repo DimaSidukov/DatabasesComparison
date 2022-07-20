@@ -18,7 +18,7 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
 
     private static SQLOHDatabaseHelper mInstance;
 
-    private static final String DATABASE_NAME = "sqloh";
+    private static final String DATABASE_NAME = "sqloh-database";
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_NEWS = "news";
@@ -48,17 +48,16 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_TABLE = "CREATE TABLE " + TABLE_NEWS +
-                "(" + KEY_ID + "INTEGER PRIMARY KEY," +
-                KEY_AUTHOR + "TEXT," +
-                KEY_CONTENT + "TEXT," +
-                KEY_DESCRIPTION + "TEXT," +
-                KEY_PUBLISHED_AT + "TEXT," +
-                KEY_SOURCE_ID + "TEXT," +
-                KEY_SOURCE_NAME + "TEXT," +
-                KEY_TITLE + "TEXT," +
-                KEY_URL + "TEXT," +
-                KEY_URL_TO_IMAGE + "TEXT" +
-                ")";
+                "(" + KEY_ID + "INTEGER PRIMARY KEY, " +
+                KEY_AUTHOR + " TEXT, " +
+                KEY_CONTENT + " TEXT, " +
+                KEY_DESCRIPTION + " TEXT, " +
+                KEY_PUBLISHED_AT + " TEXT, " +
+                KEY_SOURCE_ID + " TEXT, " +
+                KEY_SOURCE_NAME + " TEXT, " +
+                KEY_TITLE + " TEXT, " +
+                KEY_URL + " TEXT, " +
+                KEY_URL_TO_IMAGE + " TEXT)";
 
         sqLiteDatabase.execSQL(CREATE_TABLE);
     }
@@ -93,6 +92,7 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
         if (cursor == null || !cursor.moveToFirst()) {
             try {
                 db.insertOrThrow(TABLE_NEWS, null, values);
+                db.setTransactionSuccessful();
             } catch (SQLException e) {
                 logError(e);
             } finally {
@@ -102,40 +102,14 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
             updateArticle(article);
         }
 
-        db.setTransactionSuccessful();
-
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
     }
 
-    // inserting large chunks of data via statements has better performance than using
-    // values.put() approach
     public void addArticles(List<Article> articles) {
-        SQLiteDatabase db = getWritableDatabase();
-
         for (Article article : articles) {
-            escapeApostrophe(article);
-            db.execSQL("INSERT INTO " + TABLE_NEWS +
-                    " (" + KEY_AUTHOR + ", " +
-                    KEY_CONTENT + ", " +
-                    KEY_DESCRIPTION + ", " +
-                    KEY_PUBLISHED_AT + ", " +
-                    KEY_SOURCE_ID + ", " +
-                    KEY_SOURCE_NAME + ", " +
-                    KEY_TITLE + ", " +
-                    KEY_URL + ", " +
-                    KEY_URL_TO_IMAGE + ") VALUES ('" +
-                    article.getAuthor() + "', '" +
-                    article.getContent() + "', '" +
-                    article.getDescription() + "', '" +
-                    article.getPublishedAt() + "', '" +
-                    article.getSource().getId() + "', '" +
-                    article.getSource().getName() + "', '" +
-                    article.getTitle() + "', '" +
-                    article.getUrl() + "', '" +
-                    article.getUrlToImage() + "');"
-            );
+            addArticle(article);
         }
     }
 
@@ -186,7 +160,7 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
         db.beginTransaction();
 
         try {
-            db.delete(TABLE_NEWS, KEY_URL + " = " + article.getUrl(), null);
+            db.delete(TABLE_NEWS, KEY_URL + " = '" + article.getUrl() + "'", null);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             logError(e);
@@ -208,21 +182,6 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-    }
-
-    private void escapeApostrophe(Article article) {
-        article.setAuthor(article.getAuthor().replaceAll("'", "''"));
-        article.setContent(article.getContent().replaceAll("'", "''"));
-        article.setDescription(article.getDescription().replaceAll("'", "''"));
-        article.setPublishedAt(article.getPublishedAt().replaceAll("'", "''"));
-        article.setSource(new Source(
-                article.getSource().getId().replaceAll("'", "''"),
-                article.getSource().getName().replaceAll("'", "''"))
-        );
-        article.setTitle(article.getTitle().replaceAll("'", "''"));
-        article.setUrl(article.getUrl().replaceAll("'", "''"));
-        article.setUrlToImage(article.getUrlToImage().replaceAll("'", "''"));
-
     }
 
     private void putArticleIntoValues(ContentValues values, Article article) {
