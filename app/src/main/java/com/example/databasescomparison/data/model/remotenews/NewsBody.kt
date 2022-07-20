@@ -1,4 +1,4 @@
-package com.example.databasescomparison.data.remote.model
+package com.example.databasescomparison.data.model.remotenews
 
 import com.google.gson.annotations.Expose
 

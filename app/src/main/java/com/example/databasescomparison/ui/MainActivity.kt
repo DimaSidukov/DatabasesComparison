@@ -1,22 +1,14 @@
 package com.example.databasescomparison.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.databasescomparison.R
-import com.example.databasescomparison.data.remote.WebService
-import com.example.databasescomparison.data.remote.model.NewsBody
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
+import com.example.databasescomparison.data.model.remotenews.Article
 import org.koin.android.ext.android.inject
-import java.io.IOException
 
 class MainActivity : AppCompatActivity(), MainModel {
 
@@ -45,9 +37,9 @@ class MainActivity : AppCompatActivity(), MainModel {
         }
     }
 
-    override fun showNewsList(data: NewsBody) {
+    override fun showNewsList(data: List<Article>) {
         runOnUiThread {
-            val adapter = NewsAdapter(data.articles)
+            val adapter = NewsAdapter(data)
             recyclerView.adapter = adapter
         }
     }

@@ -1,4 +1,4 @@
-package com.example.databasescomparison.data.remote;
+package com.example.databasescomparison.data.remote.source;
 
 import java.util.Objects;
 
@@ -72,6 +72,5 @@ public class WebService {
     public void requestNews(int page, Callback callback) {
         client.newCall(requestHeadlines(page)).enqueue(callback);
     }
-
 
 }

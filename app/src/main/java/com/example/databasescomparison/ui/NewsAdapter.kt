@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.databasescomparison.R
-import com.example.databasescomparison.data.remote.model.Article
+import com.example.databasescomparison.data.model.remotenews.Article
 
 class NewsAdapter(private val newsList: List<Article>) :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
