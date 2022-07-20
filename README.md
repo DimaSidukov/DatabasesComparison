@@ -16,3 +16,5 @@ Look up for Realm. He is considered to be quite efficient since it is written in
 https://blog.mindorks.com/how-does-room-work-internally
 
 Add functionality on the screen that allows performing different database operations, such as deleting, inserting, updating and querying data. Remove recyclerview list from the screen and replace with different buttons or something
+
+Android docs of data storage: https://developer.android.com/training/data-storage/room
