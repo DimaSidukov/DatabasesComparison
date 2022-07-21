@@ -60,6 +60,8 @@ class MainActivity : AppCompatActivity(), MainModel {
         runOnUiThread {
             sqlohTime.text = dbTimer.sqlohTime.toText()
             roomTime.text = dbTimer.roomTime.toText()
+            realmTime.text = dbTimer.realmTime.toText()
+            objectBoxTime.text = dbTimer.objectBoxTime.toText()
         }
     }
 

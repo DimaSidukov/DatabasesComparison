@@ -3,7 +3,7 @@ package com.example.databasescomparison.data.model.roomsensor
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.databasescomparison.data.model.remotesensors.Sensor
+import com.example.databasescomparison.data.model.remotesensor.Sensor
 
 @Entity
 data class RoomSensor(

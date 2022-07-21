@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'io.realm.kotlin'
+    id 'io.objectbox'
 }
 
 android {
@@ -59,4 +61,8 @@ dependencies {
     // Room
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    // Realm
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3'
+    implementation 'io.realm.kotlin:library-base:1.0.1'
 }

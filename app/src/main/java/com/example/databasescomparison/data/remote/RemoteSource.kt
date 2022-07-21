@@ -1,8 +1,8 @@
 package com.example.databasescomparison.data.remote
 
 import android.util.Log
-import com.example.databasescomparison.data.model.remotesensors.Sensor
-import com.example.databasescomparison.data.model.remotesensors.SensorsBody
+import com.example.databasescomparison.data.model.remotesensor.Sensor
+import com.example.databasescomparison.data.model.remotesensor.SensorsBody
 import com.example.databasescomparison.data.remote.source.WebService
 import com.google.gson.Gson
 import okhttp3.Call

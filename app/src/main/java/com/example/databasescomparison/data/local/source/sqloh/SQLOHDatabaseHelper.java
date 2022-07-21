@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.databasescomparison.data.model.remotesensors.Sensor;
+import com.example.databasescomparison.data.model.remotesensor.Sensor;
 
 import java.util.ArrayList;
 import java.util.List;

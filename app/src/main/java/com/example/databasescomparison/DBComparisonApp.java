@@ -8,8 +8,12 @@ import static org.koin.core.context.DefaultContextExtKt.startKoin;
 
 import android.app.Application;
 
+import com.example.databasescomparison.di.ObjectBox;
+
 import org.koin.android.java.KoinAndroidApplication;
 import org.koin.core.KoinApplication;
+
+import io.realm.kotlin.Realm;
 
 public class DBComparisonApp extends Application {
 
@@ -26,6 +30,7 @@ public class DBComparisonApp extends Application {
                 getAppModule()
             );
         startKoin(koinApplication);
-    }
 
+        ObjectBox.init(this);
+    }
 }
