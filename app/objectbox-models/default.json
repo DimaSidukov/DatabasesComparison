@@ -1,0 +1,77 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2149501463608653606",
+      "lastPropertyId": "10:8861401140682247188",
+      "name": "ObjectBoxSensor",
+      "properties": [
+        {
+          "id": "1:6559603588033042682",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5244795703077870293",
+          "name": "brokerName",
+          "type": 9
+        },
+        {
+          "id": "3:383468688991647675",
+          "name": "aboveSeaLevel",
+          "type": 8
+        },
+        {
+          "id": "4:2231917288209986587",
+          "name": "location",
+          "type": 9
+        },
+        {
+          "id": "5:7304366783928454351",
+          "name": "rawID",
+          "type": 9
+        },
+        {
+          "id": "6:2671260512835029116",
+          "name": "latitude",
+          "type": 8
+        },
+        {
+          "id": "7:8625010548240124687",
+          "name": "longitude",
+          "type": 8
+        },
+        {
+          "id": "8:7443504080357726011",
+          "name": "heightAboveGround",
+          "type": 8
+        },
+        {
+          "id": "9:8872695513216085470",
+          "name": "sensorName",
+          "type": 9
+        },
+        {
+          "id": "10:8861401140682247188",
+          "name": "thirdParty",
+          "type": 1
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:2149501463608653606",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
