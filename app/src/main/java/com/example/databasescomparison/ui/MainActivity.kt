@@ -2,13 +2,9 @@ package com.example.databasescomparison.ui
 
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.databasescomparison.R
-import com.example.databasescomparison.data.model.remotenews.Article
 import com.example.databasescomparison.data.model.timer.DbTimer
 import org.koin.android.ext.android.inject
 
@@ -16,9 +12,12 @@ class MainActivity : AppCompatActivity(), MainModel {
 
     private val presenter: MainPresenter by inject()
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var editText: EditText
-    private lateinit var button: Button
+    private lateinit var addSensorsButton: Button
+
+    private lateinit var getSensorsButton: Button
+    private lateinit var deleteOneSensorButton: Button
+    private lateinit var deleteSensorsButton: Button
+
     private lateinit var sqlohTime: TextView
     private lateinit var roomTime: TextView
     private lateinit var realmTime: TextView
@@ -30,29 +29,30 @@ class MainActivity : AppCompatActivity(), MainModel {
 
         if (savedInstanceState == null) presenter.attachView(this)
 
-        recyclerView = findViewById(R.id.recyclerview)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        getSensorsButton = findViewById(R.id.get_sensors_button)
+        deleteOneSensorButton = findViewById(R.id.delete_one_sensor_button)
+        deleteSensorsButton = findViewById(R.id.delete_sensors_button)
+        addSensorsButton = findViewById(R.id.add_sensors_button)
 
-        editText = findViewById(R.id.edittext)
-        button = findViewById(R.id.button)
         sqlohTime = findViewById(R.id.sqloh_time)
         roomTime = findViewById(R.id.room_time)
         realmTime = findViewById(R.id.realm_time)
         objectBoxTime = findViewById(R.id.object_box_time)
 
-        button.setOnClickListener {
-            if (editText.text.isNotEmpty()) {
-                presenter.requestByQuery(editText.text.toString())
-            } else {
-                presenter.requestHeadliners()
-            }
+        addSensorsButton.setOnClickListener {
+            presenter.addSensors()
         }
-    }
 
-    override fun showNewsList(data: List<Article>) {
-        runOnUiThread {
-            val adapter = NewsAdapter(data)
-            recyclerView.adapter = adapter
+        getSensorsButton.setOnClickListener {
+            presenter.getSensors()
+        }
+
+        deleteOneSensorButton.setOnClickListener {
+            presenter.deleteRandomSensor()
+        }
+
+        deleteSensorsButton.setOnClickListener {
+            presenter.deleteSensors()
         }
     }
 

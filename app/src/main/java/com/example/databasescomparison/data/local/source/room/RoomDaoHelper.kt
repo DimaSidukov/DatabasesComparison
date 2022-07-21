@@ -1,24 +1,24 @@
 package com.example.databasescomparison.data.local.source.room
 
-import com.example.databasescomparison.data.model.remotenews.Article
-import com.example.databasescomparison.data.model.roomnews.toRoomArticle
+import com.example.databasescomparison.data.model.remotesensors.Sensor
+import com.example.databasescomparison.data.model.roomsensor.toRoomSensor
 
-class RoomDaoHelper(private val roomNewsDao: RoomNewsDao) {
+class RoomDaoHelper(private val roomSensorDao: RoomSensorDao) {
 
-    fun getRoomArticles() = roomNewsDao.getRoomArticles()
+    fun getRoomSensors() = roomSensorDao.getRoomSensors()
 
-    suspend fun insertRoomArticle(article: Article) =
-        roomNewsDao.insertRoomArticle(article.toRoomArticle())
+    suspend fun insertRoomSensor(sensor: Sensor) =
+        roomSensorDao.insertRoomSensor(sensor.toRoomSensor())
 
-    suspend fun insertRoomArticles(articles: List<Article>) =
-        roomNewsDao.insertRoomArticles(articles.map { it.toRoomArticle() })
+    suspend fun insertRoomSensors(sensors: List<Sensor>) =
+        roomSensorDao.insertRoomSensors(sensors.map { it.toRoomSensor() })
 
-    suspend fun updateRoomArticle(article: Article) =
-        roomNewsDao.updateRoomArticle(article.toRoomArticle())
+    suspend fun updateRoomSensor(sensor: Sensor) =
+        roomSensorDao.updateRoomSensor(sensor.toRoomSensor())
 
-    suspend fun deleteRoomArticle(article: Article) =
-        roomNewsDao.deleteRoomArticle(article.toRoomArticle())
+    suspend fun deleteRoomSensor(sensor: Sensor) =
+        roomSensorDao.deleteRoomSensor(sensor.toRoomSensor())
 
-    suspend fun deleteAllRoomArticles() = roomNewsDao.deleteAllRoomArticles()
+    suspend fun deleteAllRoomSensors() = roomSensorDao.deleteAllRoomSensors()
 
 }

@@ -1,7 +1,7 @@
 package com.example.databasescomparison.ui
 
 import com.example.databasescomparison.data.Repository
-import com.example.databasescomparison.data.model.remotenews.Article
+import com.example.databasescomparison.data.model.timer.DbTimer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -9,25 +9,39 @@ import kotlinx.coroutines.launch
 
 class MainPresenter(private val repository: Repository) {
 
-    private val scope by lazy { CoroutineScope(Job() + Dispatchers.IO) }
+    private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
     private lateinit var model: MainModel
 
     fun attachView(model: MainModel) {
         this.model = model
-        requestHeadliners()
     }
 
-    fun requestHeadliners() = repository.requestHeadlines { timeAndShow(it) }
+    fun addSensors() {
+        repository.requestSensors { list ->
+            showTimeResults {
+                repository.addSensors(list)
+            }
+        }
+    }
 
-    fun requestByQuery(query: String) = repository.requestNewsByQuery(query) { timeAndShow(it) }
+    fun getSensors() {
+        showTimeResults {
+            repository.getSensors()
+        }
+    }
 
-    private fun timeAndShow(articles: List<Article>) {
-        model.showNewsList(articles)
+    fun deleteRandomSensor() {}
+
+    fun deleteSensors() {
+        showTimeResults {
+            repository.deleteAllSensors()
+        }
+    }
+
+    private fun showTimeResults(func: suspend () -> DbTimer) {
         scope.launch {
-            model.updateTimerResults(
-                repository.addArticles(articles)
-            )
+            model.updateTimerResults(func())
         }
     }
 }

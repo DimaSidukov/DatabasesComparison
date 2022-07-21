@@ -8,8 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.databasescomparison.data.model.remotenews.Article;
-import com.example.databasescomparison.data.model.remotenews.Source;
+import com.example.databasescomparison.data.model.remotesensors.Sensor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,18 +20,18 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "sqloh-database";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String TABLE_NEWS = "news";
+    private static final String TABLE_SENSORS = "sensors";
 
     private static final String KEY_ID = "id";
-    private static final String KEY_AUTHOR = "author";
-    private static final String KEY_CONTENT = "content";
-    private static final String KEY_DESCRIPTION = "description";
-    private static final String KEY_PUBLISHED_AT = "publishedAt";
-    private static final String KEY_SOURCE_ID = "source";
-    private static final String KEY_SOURCE_NAME = "name";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_URL = "url";
-    private static final String KEY_URL_TO_IMAGE = "urlToImage";
+    private static final String KEY_BROKER_NAME = "broker_name";
+    private static final String KEY_ABOVE_SEA_LEVEL = "above_sea_level";
+    private static final String KEY_LOCATION = "location";
+    private static final String KEY_RAW_ID = "raw_id";
+    private static final String KEY_LATITUDE = "latitude";
+    private static final String KEY_LONGITUDE = "longitude";
+    private static final String KEY_HEIGHT_ABOVE_GROUND = "height_above_ground";
+    private static final String KEY_SENSOR_NAME = "sensor_name";
+    private static final String KEY_THIRD_PARTY = "third_party";
 
     public static synchronized SQLOHDatabaseHelper getInstance(Context context) {
         if (mInstance == null) {
@@ -47,17 +46,17 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String CREATE_TABLE = "CREATE TABLE " + TABLE_NEWS +
+        String CREATE_TABLE = "CREATE TABLE " + TABLE_SENSORS +
                 "(" + KEY_ID + "INTEGER PRIMARY KEY, " +
-                KEY_AUTHOR + " TEXT, " +
-                KEY_CONTENT + " TEXT, " +
-                KEY_DESCRIPTION + " TEXT, " +
-                KEY_PUBLISHED_AT + " TEXT, " +
-                KEY_SOURCE_ID + " TEXT, " +
-                KEY_SOURCE_NAME + " TEXT, " +
-                KEY_TITLE + " TEXT, " +
-                KEY_URL + " TEXT, " +
-                KEY_URL_TO_IMAGE + " TEXT)";
+                KEY_BROKER_NAME + " TEXT, " +
+                KEY_ABOVE_SEA_LEVEL + " DOUBLE, " +
+                KEY_LOCATION + " TEXT, " +
+                KEY_RAW_ID + " TEXT, " +
+                KEY_LATITUDE + " DOUBLE, " +
+                KEY_LONGITUDE + " DOUBLE, " +
+                KEY_HEIGHT_ABOVE_GROUND + " DOUBLE, " +
+                KEY_SENSOR_NAME + " TEXT, " +
+                KEY_THIRD_PARTY + " BOOLEAN)";
 
         sqLiteDatabase.execSQL(CREATE_TABLE);
     }
@@ -72,26 +71,26 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         // look for better upgrade process
         if (i != i1) {
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NEWS);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SENSORS);
             onCreate(sqLiteDatabase);
         }
     }
 
-    public void addArticle(Article article) {
+    public void addSensor(Sensor sensor) {
         // how does this method work and what does it return
         SQLiteDatabase db = getWritableDatabase();
 
         // what is the method? - discover
         db.beginTransaction();
-        String getRowQuery = "SELECT * FROM " + TABLE_NEWS + " WHERE " + KEY_URL + " = ?";
-        Cursor cursor = db.rawQuery(getRowQuery, new String[]{article.getUrl()});
+        String getRowQuery = "SELECT * FROM " + TABLE_SENSORS + " WHERE " + KEY_LOCATION + " = ?;";
+        Cursor cursor = db.rawQuery(getRowQuery, new String[]{sensor.getLocation()});
 
         ContentValues values = new ContentValues();
-        putArticleIntoValues(values, article);
+        putSensorIntoValues(values, sensor);
 
         if (cursor == null || !cursor.moveToFirst()) {
             try {
-                db.insertOrThrow(TABLE_NEWS, null, values);
+                db.insertOrThrow(TABLE_SENSORS, null, values);
                 db.setTransactionSuccessful();
             } catch (SQLException e) {
                 logError(e);
@@ -99,7 +98,7 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
                 db.endTransaction();
             }
         } else {
-            updateArticle(article);
+            updateSensor(sensor);
         }
 
         if (cursor != null && !cursor.isClosed()) {
@@ -107,30 +106,31 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void addArticles(List<Article> articles) {
-        for (Article article : articles) {
-            addArticle(article);
+    public void addSensors(List<Sensor> sensors) {
+        for (Sensor sensor : sensors) {
+            addSensor(sensor);
         }
     }
 
-    public List<Article> getArticles() {
+    public List<Sensor> getSensors() {
         SQLiteDatabase db = getReadableDatabase();
-        List<Article> articles = new ArrayList<>();
+        List<Sensor> sensors = new ArrayList<>();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NEWS, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SENSORS, null);
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    articles.add(
-                            new Article(
+                    sensors.add(
+                            new Sensor(
                                     cursor.getString(0),
-                                    cursor.getString(1),
+                                    cursor.getDouble(1),
                                     cursor.getString(2),
                                     cursor.getString(3),
-                                    new Source(cursor.getString(4), cursor.getString(5)),
-                                    cursor.getString(6),
+                                    cursor.getDouble(4),
+                                    cursor.getDouble(5),
+                                    cursor.getDouble(6),
                                     cursor.getString(7),
-                                    cursor.getString(8)
+                                    cursor.getExtras().getBoolean(KEY_THIRD_PARTY, false)
                             )
                     );
                 } while (cursor.moveToNext());
@@ -142,25 +142,25 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-        return articles;
+        return sensors;
     }
 
-    public int updateArticle(Article article) {
+    public int updateSensor(Sensor sensor) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        putArticleIntoValues(values, article);
+        putSensorIntoValues(values, sensor);
 
-        return db.update(TABLE_NEWS, values, KEY_URL + " = ?", new String[]{(KEY_URL)});
+        return db.update(TABLE_SENSORS, values, KEY_LOCATION + " = ?", new String[]{(KEY_LOCATION)});
     }
 
-    public void deleteArticle(Article article) {
+    public void deleteSensor(Sensor sensor) {
         SQLiteDatabase db = getWritableDatabase();
 
         db.beginTransaction();
 
         try {
-            db.delete(TABLE_NEWS, KEY_URL + " = '" + article.getUrl() + "'", null);
+            db.delete(TABLE_SENSORS, KEY_LOCATION + " = '" + sensor.getLocation() + "'", null);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             logError(e);
@@ -169,13 +169,13 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteAllArticles() {
+    public void deleteAllSensors() {
         SQLiteDatabase db = getWritableDatabase();
 
         db.beginTransaction();
 
         try {
-            db.delete(TABLE_NEWS, null, null);
+            db.delete(TABLE_SENSORS, null, null);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             logError(e);
@@ -184,16 +184,16 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    private void putArticleIntoValues(ContentValues values, Article article) {
-        values.put(KEY_AUTHOR, article.getAuthor());
-        values.put(KEY_CONTENT, article.getContent());
-        values.put(KEY_DESCRIPTION, article.getDescription());
-        values.put(KEY_PUBLISHED_AT, article.getPublishedAt());
-        values.put(KEY_SOURCE_ID, article.getSource().getId());
-        values.put(KEY_SOURCE_NAME, article.getSource().getId());
-        values.put(KEY_TITLE, article.getTitle());
-        values.put(KEY_URL, article.getUrl());
-        values.put(KEY_URL_TO_IMAGE, article.getUrlToImage());
+    private void putSensorIntoValues(ContentValues values, Sensor sensor) {
+        values.put(KEY_BROKER_NAME, sensor.getBrokerName());
+        values.put(KEY_ABOVE_SEA_LEVEL, sensor.getAboveSeaLevel());
+        values.put(KEY_LOCATION, sensor.getLocation());
+        values.put(KEY_RAW_ID, sensor.getRawID());
+        values.put(KEY_LATITUDE, sensor.getLatitude());
+        values.put(KEY_LONGITUDE, sensor.getLongitude());
+        values.put(KEY_HEIGHT_ABOVE_GROUND, sensor.getHeightAboveGround());
+        values.put(KEY_SENSOR_NAME, sensor.getSensorName());
+        values.put(KEY_THIRD_PARTY, sensor.getThirdParty());
     }
 
     private void logError(Exception e) {

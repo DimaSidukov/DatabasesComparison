@@ -11,30 +11,18 @@ public class WebService {
 
     private final OkHttpClient client;
 
-    private static final String API_KEY = "68f3eeff9f7149939f50e1e30b740151";
-    private static final String BASE_URL = "https://newsapi.org/v2/";
+    private static final String BASE_URL = "http://uoweb3.ncl.ac.uk/api/v1.1/";
 
-    private static final String HEADLINES_PATH = "top-headlines";
-    private static final String EVERYTHING_PATH = "everything";
-    private static final String API_KEY_PARAMETER = "apiKey";
-    private static final String COUNTRY_PARAMETER = "country";
-    private static final String PAGE_SIZE_PARAMETER = "pageSize";
-    private static final String PAGE_PARAMETER = "page";
-    private static final String QUERY_PARAMETER = "q";
+    private static final String SENSORS = "sensors/json";
 
-    public WebService(OkHttpClient client) {
-        this.client = client;
+    public WebService(OkHttpClient cl) {
+        this.client = cl;
     }
 
-    private Request requestHeadlines(int page) {
+    private Request generateRequest() {
         HttpUrl.Builder urlBuilder = Objects
-                .requireNonNull(HttpUrl.parse(BASE_URL + HEADLINES_PATH))
+                .requireNonNull(HttpUrl.parse(BASE_URL + SENSORS))
                 .newBuilder();
-        urlBuilder.addQueryParameter(API_KEY_PARAMETER, API_KEY);
-        urlBuilder.addQueryParameter(COUNTRY_PARAMETER, "us");
-        urlBuilder.addQueryParameter(PAGE_SIZE_PARAMETER, "100");
-        urlBuilder.addQueryParameter(PAGE_PARAMETER, String.valueOf(page));
-
         String url = urlBuilder.build().toString();
 
         return new Request.Builder()
@@ -42,35 +30,8 @@ public class WebService {
                 .build();
     }
 
-    private Request requestEverything(String query, int page) {
-        HttpUrl.Builder urlBuilder = Objects
-                .requireNonNull(HttpUrl.parse(BASE_URL + EVERYTHING_PATH))
-                .newBuilder();
-        urlBuilder.addQueryParameter(API_KEY_PARAMETER, API_KEY);
-        urlBuilder.addQueryParameter(QUERY_PARAMETER, query);
-        urlBuilder.addQueryParameter(PAGE_PARAMETER, String.valueOf(page));
-
-        String url = urlBuilder.build().toString();
-
-        return new Request.Builder()
-                .url(url)
-                .build();
-    }
-
-    public void requestNews(String query, Callback callback) {
-        requestNews(query, 1, callback);
-    }
-
-    public void requestNews(String query, int page, Callback callback) {
-        client.newCall(requestEverything(query, page)).enqueue(callback);
-    }
-
-    public void requestNews(Callback callback) {
-        requestNews(1, callback);
-    }
-
-    public void requestNews(int page, Callback callback) {
-        client.newCall(requestHeadlines(page)).enqueue(callback);
+    public void requestSensors(Callback callback) {
+        client.newCall(generateRequest()).enqueue(callback);
     }
 
 }

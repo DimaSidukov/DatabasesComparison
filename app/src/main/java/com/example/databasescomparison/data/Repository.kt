@@ -1,33 +1,24 @@
 package com.example.databasescomparison.data
 
 import com.example.databasescomparison.data.local.LocalSource
-import com.example.databasescomparison.data.model.remotenews.Article
+import com.example.databasescomparison.data.model.remotesensors.Sensor
 import com.example.databasescomparison.data.remote.RemoteSource
 
 class Repository(private val localSource: LocalSource, private val remoteSource: RemoteSource) {
 
-    fun requestHeadlines(onSuccess: (List<Article>) -> Unit) =
-        remoteSource.requestHeadlines(onSuccess)
+    fun requestSensors(onSuccess: (List<Sensor>) -> Unit) =
+        remoteSource.requestSensors(onSuccess)
 
-    fun requestHeadlinesOnPage(page: Int, onSuccess: (List<Article>) -> Unit) =
-        remoteSource.requestHeadlinesOnPage(page, onSuccess)
+    suspend fun addSensor(sensor: Sensor) = localSource.addSensor(sensor)
 
-    fun requestNewsByQuery(query: String, onSuccess: (List<Article>) -> Unit) =
-        remoteSource.requestNewsByQuery(query, onSuccess)
+    suspend fun addSensors(sensors: List<Sensor>) = localSource.addSensors(sensors)
 
-    fun requestNewsByQueryOnPage(query: String, page: Int, onSuccess: (List<Article>) -> Unit) =
-        remoteSource.requestNewsByQueryOnPage(query, page, onSuccess)
+    suspend fun updateSensors(sensor: Sensor) = localSource.updateSensor(sensor)
 
-    fun addArticle(article: Article) = localSource.addArticle(article)
+    suspend fun getSensors() = localSource.getSensors()
 
-    fun addArticles(articles: List<Article>) = localSource.addArticles(articles)
+    suspend fun deleteSensor(sensor: Sensor) = localSource.deleteSensor(sensor)
 
-    fun updateArticle(article: Article) = localSource.updateArticle(article)
-
-    fun getArticles() = localSource.getArticles()
-
-    fun deleteArticle(article: Article) = localSource.deleteArticle(article)
-
-    fun deleteAllArticles() = localSource.deleteAllArticles()
+    suspend fun deleteAllSensors() = localSource.deleteAllSensors()
 
 }

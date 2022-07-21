@@ -5,15 +5,20 @@ import androidx.room.Room
 import com.example.databasescomparison.data.Repository
 import com.example.databasescomparison.data.local.LocalSource
 import com.example.databasescomparison.data.local.source.room.RoomDaoHelper
-import com.example.databasescomparison.data.local.source.room.RoomNewsDatabase
+import com.example.databasescomparison.data.local.source.room.RoomSensorsDatabase
 import com.example.databasescomparison.data.local.source.sqloh.SQLOHDatabaseHelper
 import com.example.databasescomparison.data.remote.RemoteSource
 import com.example.databasescomparison.data.remote.source.WebService
 import com.example.databasescomparison.ui.MainPresenter
 import com.google.gson.Gson
+import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+import java.security.KeyPair
+import java.security.KeyStore
+import java.security.PrivateKey
+import java.security.cert.X509Certificate
 
 val networkModule = module {
     single { provideOkHttpClient() }
@@ -39,7 +44,21 @@ val appModule = module {
 /**
  *  Network providers
  */
-fun provideOkHttpClient() = OkHttpClient().newBuilder().build()
+fun provideOkHttpClient(): OkHttpClient {
+    val builder = OkHttpClient().newBuilder()
+
+    builder.connectionSpecs(
+        listOf(
+            ConnectionSpec.CLEARTEXT,
+            ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                .allEnabledTlsVersions()
+                .allEnabledCipherSuites()
+                .build()
+        )
+    )
+
+    return builder.build()
+}
 
 fun provideWebService(okHttpClient: OkHttpClient) =
     WebService(okHttpClient)
@@ -51,11 +70,11 @@ fun provideSQLOH(context: Context): SQLOHDatabaseHelper = SQLOHDatabaseHelper.ge
 
 fun provideRoomDatabase(context: Context) = Room.databaseBuilder(
     context,
-    RoomNewsDatabase::class.java, "room-database"
+    RoomSensorsDatabase::class.java, "room-database"
 ).build()
 
-fun provideRoomDaoHelper(roomNewsDatabase: RoomNewsDatabase) =
-    RoomDaoHelper(roomNewsDatabase.roomNewsDao())
+fun provideRoomDaoHelper(roomSensorsDatabase: RoomSensorsDatabase) =
+    RoomDaoHelper(roomSensorsDatabase.roomSensorDao())
 
 /**
  *  Repository providers

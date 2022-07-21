@@ -2,53 +2,74 @@ package com.example.databasescomparison.data.local
 
 import com.example.databasescomparison.data.local.source.room.RoomDaoHelper
 import com.example.databasescomparison.data.local.source.sqloh.SQLOHDatabaseHelper
-import com.example.databasescomparison.data.model.remotenews.Article
+import com.example.databasescomparison.data.model.remotesensors.Sensor
 import com.example.databasescomparison.data.model.timer.DbTimer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
-class LocalSource(private val sqloh: SQLOHDatabaseHelper, private val roomDao: RoomDaoHelper) {
+class LocalSource(
+    private val sqloh: SQLOHDatabaseHelper,
+    private val roomDaoHelper: RoomDaoHelper,
+) {
 
     private val scope by lazy { CoroutineScope(Job() + Dispatchers.IO) }
 
-    fun addArticle(article: Article) {
-        sqloh.addArticle(article)
-    }
+    suspend fun addSensor(sensor: Sensor) = createDbTimer(
+        { sqloh.addSensor(sensor) },
+        { roomDaoHelper.insertRoomSensor(sensor) },
+        {}, {}
+    )
 
-    fun addArticles(articles: List<Article>): DbTimer {
-        // use coroutines instead of runBlocking
-        val dbTimer = DbTimer()
-        runBlocking(Dispatchers.IO) {
-            dbTimer.sqlohTime = timeMethod { sqloh.addArticles(articles) }
-            dbTimer.roomTime = timeMethod { roomDao.insertRoomArticles(articles) }
-        }
-        return dbTimer
-    }
+    suspend fun addSensors(sensors: List<Sensor>) = createDbTimer(
+        { sqloh.addSensors(sensors) },
+        { roomDaoHelper.insertRoomSensors(sensors) },
+        {}, {}
+    )
 
-    fun getArticles(): List<Article> {
-        return sqloh.articles
-    }
+    suspend fun getSensors() = createDbTimer(
+        { sqloh.sensors },
+        { roomDaoHelper.getRoomSensors() },
+        {}, {}
+    )
 
-    fun deleteArticle(article: Article) {
-        sqloh.deleteArticle(article)
-    }
+    suspend fun deleteSensor(sensor: Sensor) = createDbTimer(
+        { sqloh.deleteSensor(sensor) },
+        { roomDaoHelper.deleteRoomSensor(sensor) },
+        {}, {}
+    )
 
-    fun deleteAllArticles() {
-        sqloh.deleteAllArticles()
-    }
+    suspend fun deleteAllSensors() = createDbTimer(
+        { sqloh.deleteAllSensors() },
+        { roomDaoHelper.deleteAllRoomSensors() },
+        {}, {}
+    )
 
-    fun updateArticle(article: Article) {
-        sqloh.updateArticle(article)
-    }
+    suspend fun updateSensor(sensor: Sensor) = createDbTimer(
+        { sqloh.updateSensor(sensor) },
+        { roomDaoHelper.updateRoomSensor(sensor) },
+        {}, {}
+    )
 
-    private suspend fun timeMethod(func: suspend () -> Unit): Long {
+
+    private suspend fun timeMethod(func: suspend () -> Unit): Deferred<Long> = scope.async {
         val begin = System.currentTimeMillis()
-        func()
+        scope.launch { func() }
         val end = System.currentTimeMillis()
-
-        return end - begin
+        end - begin
     }
+
+    private suspend fun createDbTimer(
+        sqlohFunc: () -> Unit,
+        roomFunc: suspend () -> Unit,
+        realmFunc: () -> Unit,
+        objectBoxFunc: () -> Unit
+    ): DbTimer =
+        withContext(scope.coroutineContext) {
+            val dbTimer = DbTimer()
+            dbTimer.sqlohTime = timeMethod(sqlohFunc).await()
+            dbTimer.roomTime = timeMethod(roomFunc).await()
+            dbTimer.realmTime = timeMethod(realmFunc).await()
+            dbTimer.objectBoxTime = timeMethod(objectBoxFunc).await()
+            dbTimer
+        }
 
 }
