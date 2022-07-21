@@ -15,6 +15,8 @@ Look up for Realm. He is considered to be quite efficient since it is written in
 
 https://blog.mindorks.com/how-does-room-work-internally
 
-Add functionality on the screen that allows performing different database operations, such as deleting, inserting, updating and querying data. Remove recyclerview list from the screen and replace with different buttons or something. Replace search field with "random words" button, that will send random word (either stored locally or fetched remotely) as query parameter. Добавить свертывающуюся стрелочку для операций в базе данных.
+More about Realm https://www.mongodb.com/docs/realm/sdk/kotlin/realm-database/overview/
 
-Android docs of data storage: https://developer.android.com/training/data-storage/room
+Look for implementation of ObjectBox
+
+Android docs of data storage (можно что-нибудь взять для доклада): https://developer.android.com/training/data-storage/room
