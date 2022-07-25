@@ -142,13 +142,13 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
         return sensors;
     }
 
-    public int updateSensor(Sensor sensor) {
+    public void updateSensor(Sensor sensor) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         putSensorIntoValues(values, sensor);
 
-        return db.update(TABLE_SENSORS, values, KEY_LOCATION + " = ?", new String[]{ (KEY_LOCATION) });
+        db.update(TABLE_SENSORS, values, KEY_LOCATION + " = ?", new String[]{ (KEY_LOCATION) });
     }
 
     public void deleteSensor(Sensor sensor) {

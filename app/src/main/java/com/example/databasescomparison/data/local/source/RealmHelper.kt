@@ -14,7 +14,7 @@ class RealmHelper(private val realm: Realm) {
 
     fun getRealmSensors() = realm.query<RealmSensor>().find()
 
-    suspend fun addRealmSensor(sensor: Sensor) {
+    private suspend fun addRealmSensor(sensor: Sensor) {
         scope.launch {
             realm.write {
                 this.query<RealmSensor>("location == \"${sensor.location}\"")

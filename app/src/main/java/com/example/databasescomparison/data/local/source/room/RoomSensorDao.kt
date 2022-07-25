@@ -1,7 +1,7 @@
 package com.example.databasescomparison.data.local.source.room
 
 import androidx.room.*
-import com.example.databasescomparison.data.model.roomsensor.RoomSensor
+import com.example.databasescomparison.data.model.RoomSensor
 
 @Dao
 interface RoomSensorDao {
