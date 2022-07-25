@@ -1,10 +1,10 @@
 # DatabasesComparison
 
 Implements several databases:
-1) Room ☑️
-2) SQLiteOpenHelper ☑️
-3) Realm
-4) ObjectBox
+1) SQLiteOpenHelper ☑️
+2) Room ☑️
+3) Realm ☑️
+4) ObjectBox ☑️
 
 Which principle Room uses under the hood? Does it use MVCC (https://en.wikipedia.org/wiki/Multiversion_concurrency_control)?
 What is DAO pattern in database? Any analogues?
