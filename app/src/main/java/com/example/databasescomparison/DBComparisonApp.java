@@ -13,8 +13,6 @@ import com.example.databasescomparison.di.ObjectBox;
 import org.koin.android.java.KoinAndroidApplication;
 import org.koin.core.KoinApplication;
 
-import io.realm.kotlin.Realm;
-
 public class DBComparisonApp extends Application {
 
     @Override
@@ -22,13 +20,13 @@ public class DBComparisonApp extends Application {
         super.onCreate();
 
         KoinApplication koinApplication = KoinAndroidApplication
-            .create(this)
-            .modules(
-                getNetworkModule(),
-                getDatabaseModule(),
-                getRepositoryModule(),
-                getAppModule()
-            );
+                .create(this)
+                .modules(
+                        getNetworkModule(),
+                        getDatabaseModule(),
+                        getRepositoryModule(),
+                        getAppModule()
+                );
         startKoin(koinApplication);
 
         ObjectBox.init(this);

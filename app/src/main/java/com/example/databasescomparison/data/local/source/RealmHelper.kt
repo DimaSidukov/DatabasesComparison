@@ -1,6 +1,6 @@
-package com.example.databasescomparison.data.local.source.realm
+package com.example.databasescomparison.data.local.source
 
-import com.example.databasescomparison.data.model.realmsensor.RealmSensor
+import com.example.databasescomparison.data.model.RealmSensor
 import com.example.databasescomparison.data.model.remotesensor.Sensor
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
@@ -10,26 +10,30 @@ import kotlinx.coroutines.launch
 
 class RealmHelper(private val realm: Realm) {
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     fun getRealmSensors() = realm.query<RealmSensor>().find()
 
     suspend fun addRealmSensor(sensor: Sensor) {
-        CoroutineScope(Dispatchers.IO).launch {
+        scope.launch {
             realm.write {
                 this.query<RealmSensor>("location == \"${sensor.location}\"")
                     .first()
                     .find()
                     ?.let {
-                        copyToRealm(RealmSensor().apply {
-                            brokerName = sensor.brokerName
-                            aboveSeaLevel = sensor.aboveSeaLevel
-                            location = sensor.location
-                            rawID = sensor.rawID
-                            latitude = sensor.latitude
-                            longitude = sensor.longitude
-                            heightAboveGround = sensor.heightAboveGround
-                            sensorName = sensor.sensorName
-                            thirdParty = sensor.thirdParty
-                        })
+                        this.copyToRealm(
+                            RealmSensor().apply {
+                                brokerName = sensor.brokerName
+                                aboveSeaLevel = sensor.aboveSeaLevel
+                                location = sensor.location
+                                rawID = sensor.rawID
+                                latitude = sensor.latitude
+                                longitude = sensor.longitude
+                                heightAboveGround = sensor.heightAboveGround
+                                sensorName = sensor.sensorName
+                                thirdParty = sensor.thirdParty
+                            }
+                        )
                     }
             }
         }

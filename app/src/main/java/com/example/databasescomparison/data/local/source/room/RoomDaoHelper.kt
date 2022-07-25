@@ -1,7 +1,7 @@
 package com.example.databasescomparison.data.local.source.room
 
 import com.example.databasescomparison.data.model.remotesensor.Sensor
-import com.example.databasescomparison.data.model.roomsensor.toRoomSensor
+import com.example.databasescomparison.data.model.toRoomSensor
 
 class RoomDaoHelper(private val roomSensorDao: RoomSensorDao) {
 

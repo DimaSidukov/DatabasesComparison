@@ -1,4 +1,4 @@
-package com.example.databasescomparison.data.local.source.sqloh;
+package com.example.databasescomparison.data.local.source;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -69,7 +69,6 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        // look for better upgrade process
         if (i != i1) {
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SENSORS);
             onCreate(sqLiteDatabase);
@@ -77,13 +76,11 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void addSensor(Sensor sensor) {
-        // how does this method work and what does it return
         SQLiteDatabase db = getWritableDatabase();
 
-        // what is the method? - discover
         db.beginTransaction();
         String getRowQuery = "SELECT * FROM " + TABLE_SENSORS + " WHERE " + KEY_LOCATION + " = ?;";
-        Cursor cursor = db.rawQuery(getRowQuery, new String[]{sensor.getLocation()});
+        Cursor cursor = db.rawQuery(getRowQuery, new String[]{ sensor.getLocation() });
 
         ContentValues values = new ContentValues();
         putSensorIntoValues(values, sensor);
@@ -121,17 +118,17 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     sensors.add(
-                            new Sensor(
-                                    cursor.getString(0),
-                                    cursor.getDouble(1),
-                                    cursor.getString(2),
-                                    cursor.getString(3),
-                                    cursor.getDouble(4),
-                                    cursor.getDouble(5),
-                                    cursor.getDouble(6),
-                                    cursor.getString(7),
-                                    cursor.getExtras().getBoolean(KEY_THIRD_PARTY, false)
-                            )
+                        new Sensor(
+                            cursor.getString(0),
+                            cursor.getDouble(1),
+                            cursor.getString(2),
+                            cursor.getString(3),
+                            cursor.getDouble(4),
+                            cursor.getDouble(5),
+                            cursor.getDouble(6),
+                            cursor.getString(7),
+                            cursor.getExtras().getBoolean(KEY_THIRD_PARTY, false)
+                        )
                     );
                 } while (cursor.moveToNext());
             }
@@ -151,7 +148,7 @@ public class SQLOHDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         putSensorIntoValues(values, sensor);
 
-        return db.update(TABLE_SENSORS, values, KEY_LOCATION + " = ?", new String[]{(KEY_LOCATION)});
+        return db.update(TABLE_SENSORS, values, KEY_LOCATION + " = ?", new String[]{ (KEY_LOCATION) });
     }
 
     public void deleteSensor(Sensor sensor) {

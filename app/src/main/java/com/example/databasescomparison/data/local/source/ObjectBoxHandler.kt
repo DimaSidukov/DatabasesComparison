@@ -1,20 +1,20 @@
-package com.example.databasescomparison.data.local.source.objectbox
+package com.example.databasescomparison.data.local.source
 
-import com.example.databasescomparison.data.model.objectboxsensor.ObjectBoxSensor
+import com.example.databasescomparison.data.model.ObjectBoxSensor
 import com.example.databasescomparison.data.model.objectboxsensor.ObjectBoxSensor_
 import com.example.databasescomparison.data.model.remotesensor.Sensor
 import com.example.databasescomparison.di.ObjectBox
 
 class ObjectBoxHandler {
 
-    val sensorBox = ObjectBox.get().boxFor(ObjectBoxSensor::class.java)
+    private val sensorBox = ObjectBox.get().boxFor(ObjectBoxSensor::class.java)
 
     fun addObjectBoxSensor(sensor: Sensor) = sensorBox.put(sensor.toObjectBoxSensor())
 
     fun addObjectBoxSensors(sensors: List<Sensor>) =
         sensorBox.put(sensors.map { it.toObjectBoxSensor() })
 
-    fun getObjectBoxSensors() = sensorBox.all
+    fun getObjectBoxSensors(): List<ObjectBoxSensor> = sensorBox.all
 
     fun updateObjectBoxSensor(sensor: Sensor) {
         sensor.location?.let { location ->
@@ -24,8 +24,7 @@ class ObjectBoxHandler {
                 ?.id
 
             objectId?.let {
-                var objectInBox = sensorBox.get(it)
-                objectInBox = sensor.toObjectBoxSensor()
+                val objectInBox: ObjectBoxSensor = sensor.toObjectBoxSensor()
                 sensorBox.put(objectInBox)
             }
         }

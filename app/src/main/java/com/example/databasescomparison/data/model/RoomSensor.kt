@@ -1,4 +1,4 @@
-package com.example.databasescomparison.data.model.roomsensor
+package com.example.databasescomparison.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

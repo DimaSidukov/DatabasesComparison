@@ -1,4 +1,4 @@
-package com.example.databasescomparison.data.model.timer
+package com.example.databasescomparison.data.model
 
 data class DbTimer(
     var sqlohTime: Long,

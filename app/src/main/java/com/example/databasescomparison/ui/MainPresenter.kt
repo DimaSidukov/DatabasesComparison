@@ -1,7 +1,7 @@
 package com.example.databasescomparison.ui
 
 import com.example.databasescomparison.data.Repository
-import com.example.databasescomparison.data.model.timer.DbTimer
+import com.example.databasescomparison.data.model.DbTimer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

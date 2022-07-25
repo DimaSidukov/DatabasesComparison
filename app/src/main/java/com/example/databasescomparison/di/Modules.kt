@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import com.example.databasescomparison.data.Repository
 import com.example.databasescomparison.data.local.LocalSource
-import com.example.databasescomparison.data.local.source.objectbox.ObjectBoxHandler
-import com.example.databasescomparison.data.local.source.realm.RealmHelper
+import com.example.databasescomparison.data.local.source.ObjectBoxHandler
+import com.example.databasescomparison.data.local.source.RealmHelper
 import com.example.databasescomparison.data.local.source.room.RoomDaoHelper
 import com.example.databasescomparison.data.local.source.room.RoomSensorsDatabase
-import com.example.databasescomparison.data.local.source.sqloh.SQLOHDatabaseHelper
-import com.example.databasescomparison.data.model.realmsensor.RealmSensor
+import com.example.databasescomparison.data.local.source.SQLOHDatabaseHelper
+import com.example.databasescomparison.data.model.RealmSensor
 import com.example.databasescomparison.data.remote.RemoteSource
 import com.example.databasescomparison.data.remote.source.WebService
 import com.example.databasescomparison.ui.MainPresenter

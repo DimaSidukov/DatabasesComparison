@@ -1,11 +1,11 @@
 package com.example.databasescomparison.data.local
 
-import com.example.databasescomparison.data.local.source.objectbox.ObjectBoxHandler
-import com.example.databasescomparison.data.local.source.realm.RealmHelper
+import com.example.databasescomparison.data.local.source.ObjectBoxHandler
+import com.example.databasescomparison.data.local.source.RealmHelper
 import com.example.databasescomparison.data.local.source.room.RoomDaoHelper
-import com.example.databasescomparison.data.local.source.sqloh.SQLOHDatabaseHelper
+import com.example.databasescomparison.data.local.source.SQLOHDatabaseHelper
 import com.example.databasescomparison.data.model.remotesensor.Sensor
-import com.example.databasescomparison.data.model.timer.DbTimer
+import com.example.databasescomparison.data.model.DbTimer
 import kotlinx.coroutines.*
 
 class LocalSource(
@@ -16,13 +16,6 @@ class LocalSource(
 ) {
 
     private val scope by lazy { CoroutineScope(Job() + Dispatchers.IO) }
-
-    suspend fun addSensor(sensor: Sensor) = createDbTimer(
-        { sqloh.addSensor(sensor) },
-        { roomDaoHelper.insertRoomSensor(sensor) },
-        { realmHelper.addRealmSensor(sensor) },
-        { objectBox.addObjectBoxSensor(sensor) }
-    )
 
     suspend fun addSensors(sensors: List<Sensor>) = createDbTimer(
         { sqloh.addSensors(sensors) },
@@ -38,25 +31,11 @@ class LocalSource(
         { objectBox.getObjectBoxSensors() }
     )
 
-    suspend fun deleteSensor(sensor: Sensor) = createDbTimer(
-        { sqloh.deleteSensor(sensor) },
-        { roomDaoHelper.deleteRoomSensor(sensor) },
-        { realmHelper.deleteRealmSensor(sensor) },
-        { objectBox.deleteObjectBoxSensor(sensor) }
-    )
-
     suspend fun deleteAllSensors() = createDbTimer(
         { sqloh.deleteAllSensors() },
         { roomDaoHelper.deleteAllRoomSensors() },
         { realmHelper.deleteRealmSensors() },
         { objectBox.deleteObjectBoxSensors() }
-    )
-
-    suspend fun updateSensor(sensor: Sensor) = createDbTimer(
-        { sqloh.updateSensor(sensor) },
-        { roomDaoHelper.updateRoomSensor(sensor) },
-        { realmHelper.updateRealmSensor(sensor) },
-        { objectBox.updateObjectBoxSensor(sensor) }
     )
 
     private suspend fun timeMethod(func: suspend () -> Unit): Long =

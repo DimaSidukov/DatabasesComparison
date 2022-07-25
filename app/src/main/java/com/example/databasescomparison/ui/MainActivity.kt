@@ -5,7 +5,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.databasescomparison.R
-import com.example.databasescomparison.data.model.timer.DbTimer
+import com.example.databasescomparison.data.model.DbTimer
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity(), MainModel {
